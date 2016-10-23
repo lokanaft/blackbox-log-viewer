@@ -246,9 +246,19 @@ try {
 				gradient.addColorStop(0,   'rgba(128,255,128,0.35)');
 				for(var i=0; i<flightLog.getSysConfig().gyro_notch_hz.length; i++) {
 					if(flightLog.getSysConfig().gyro_notch_hz[i] > 0 && flightLog.getSysConfig().gyro_notch_cutoff[i] > 0) {
+						if(flightLog.getSysConfig().gyro_notch_hz.length == 6 && DEBUG_MODE[flightLog.getSysConfig().debug_mode] == 'NOTCH'){
+							var axis = Math.floor(i/2);
+							if(dataBuffer.fieldName.match(/(debug.*)/i)!=null){
+								if(dataBuffer.fieldName !== 'debug['+axis+']'){continue;}
+							}else{
+								if(axis == 0 && dataBuffer.fieldName.match(/(.*roll.*)/i)==null){continue;}
+								if(axis == 1 && dataBuffer.fieldName.match(/(.*pitch.*)/i)==null){continue;}
+								if(axis == 2 && dataBuffer.fieldName.match(/(.*yaw.*)/i)==null){continue;}
+							}
+						}
 						drawMarkerLine(flightLog.getSysConfig().gyro_notch_hz[i],  PLOTTED_BLACKBOX_RATE, null, WIDTH, HEIGHT, (15*offset) + MARGIN, gradient, (flightLog.getSysConfig().gyro_notch_hz[i] - flightLog.getSysConfig().gyro_notch_cutoff[i]));
-						drawMarkerLine(flightLog.getSysConfig().gyro_notch_hz[i],  PLOTTED_BLACKBOX_RATE, 'GYRO notch center', WIDTH, HEIGHT, (15*offset++) + MARGIN, "rgba(128,255,128,0.50)"); // highlight the center
-						drawMarkerLine(flightLog.getSysConfig().gyro_notch_cutoff[i],  PLOTTED_BLACKBOX_RATE, 'GYRO notch cutoff', WIDTH, HEIGHT, (15*offset++) + MARGIN, "rgba(128,255,128,0.50)");
+						drawMarkerLine(flightLog.getSysConfig().gyro_notch_hz[i],  PLOTTED_BLACKBOX_RATE, 'GYRO notch['+i+'] center', WIDTH, HEIGHT, (15*offset++) + MARGIN, "rgba(128,255,128,0.50)"); // highlight the center
+						drawMarkerLine(flightLog.getSysConfig().gyro_notch_cutoff[i],  PLOTTED_BLACKBOX_RATE, 'GYRO notch['+i+'] cutoff', WIDTH, HEIGHT, (15*offset++) + MARGIN, "rgba(128,255,128,0.50)");
 					}
 				}
 			} else { // only a single gyro notch to display
