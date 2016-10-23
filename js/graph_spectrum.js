@@ -251,9 +251,11 @@ try {
 							if(dataBuffer.fieldName.match(/(debug.*)/i)!=null){
 								if(dataBuffer.fieldName !== 'debug['+axis+']'){continue;}
 							}else{
-								if(axis == 0 && dataBuffer.fieldName.match(/(.*roll.*)/i)==null){continue;}
-								if(axis == 1 && dataBuffer.fieldName.match(/(.*pitch.*)/i)==null){continue;}
-								if(axis == 2 && dataBuffer.fieldName.match(/(.*yaw.*)/i)==null){continue;}
+								if(dataBuffer.fieldName.match(/(gyro\[.*)/i)!=null){
+									if(axis == 0 && dataBuffer.fieldName.match(/(.*roll.*)/i)==null){continue;}
+									if(axis == 1 && dataBuffer.fieldName.match(/(.*pitch.*)/i)==null){continue;}
+									if(axis == 2 && dataBuffer.fieldName.match(/(.*yaw.*)/i)==null){continue;}
+								}
 							}
 						}
 						drawMarkerLine(flightLog.getSysConfig().gyro_notch_hz[i],  PLOTTED_BLACKBOX_RATE, null, WIDTH, HEIGHT, (15*offset) + MARGIN, gradient, (flightLog.getSysConfig().gyro_notch_hz[i] - flightLog.getSysConfig().gyro_notch_cutoff[i]));
